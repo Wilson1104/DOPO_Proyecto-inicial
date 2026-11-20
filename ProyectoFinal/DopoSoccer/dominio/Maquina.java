@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * Jugador controlado por la computadora. Cada perfil decide distinto qué hacer en cada momento;
- * aquí están las maniobras que comparten: atacar y defender.
+ * comparten: atacar y defender.
  */
 public abstract class Maquina extends Jugador {
 

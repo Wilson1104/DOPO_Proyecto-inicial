@@ -18,14 +18,15 @@ import dominio.RegistroDeErrores;
 import dominio.Resolucion;
 
 /**
- * Ventana principal de DOPOSoccer. Cambia entre la pantalla de inicio (ranuras), la configuración
- * del partido y el juego. Es la única que muestra mensajes de error al usuario.
+ * Ventana principal de DOPOSoccer. Cambia entre los nombres de los jugadores, la preparación (Tienda,
+ * Personaje, Jugar), la presentación del partido y el juego. Es la única que muestra mensajes de error al usuario.
  */
 public class DOPOSoccerGUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    private static final String INICIO = "inicio";
+    private static final String NOMBRES = "nombres";
     private static final String CONFIGURACION = "configuracion";
+    private static final String ENFRENTAMIENTO = "enfrentamiento";
     private static final String JUEGO = "juego";
     private static final int ANCHO_MENU = 980;
     private static final int ALTO_MENU = 650;
@@ -33,16 +34,19 @@ public class DOPOSoccerGUI extends JFrame {
     private final DOPOSoccer soccer = new DOPOSoccer();
     private final CardLayout tarjetas = new CardLayout();
     private final JPanel contenido = new JPanel(tarjetas);
-    private final PanelInicio panelInicio;
+    private final PanelNombres panelNombres;
     private final PanelConfiguracion panelConfiguracion;
+    private final PanelEnfrentamiento panelEnfrentamiento;
     private PanelJuego panelJuego;
 
     public DOPOSoccerGUI() {
         super("DOPOSoccer");
-        panelInicio = new PanelInicio(this, soccer);
+        panelNombres = new PanelNombres(this, soccer);
         panelConfiguracion = new PanelConfiguracion(this, soccer);
-        contenido.add(panelInicio, INICIO);
+        panelEnfrentamiento = new PanelEnfrentamiento(this, soccer);
+        contenido.add(panelNombres, NOMBRES);
         contenido.add(panelConfiguracion, CONFIGURACION);
+        contenido.add(panelEnfrentamiento, ENFRENTAMIENTO);
         setContentPane(contenido);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -51,13 +55,14 @@ public class DOPOSoccerGUI extends JFrame {
                 salir();
             }
         });
-        mostrarInicio();
+        mostrarNombres();
     }
 
-    void mostrarInicio() {
+    /** Primera pantalla: los nombres del jugador 1 y el jugador 2. */
+    void mostrarNombres() {
         quitarJuego();
-        panelInicio.refrescar();
-        tarjetas.show(contenido, INICIO);
+        panelNombres.preparar();
+        tarjetas.show(contenido, NOMBRES);
         tamanioDeMenu();
     }
 
@@ -66,6 +71,12 @@ public class DOPOSoccerGUI extends JFrame {
         panelConfiguracion.refrescar();
         tarjetas.show(contenido, CONFIGURACION);
         tamanioDeMenu();
+    }
+
+    /** Banderas, nombres y botón Jugar. {@code perfilMaquina} es null cuando juegan dos personas. */
+    void mostrarPresentacion(String pais1, String pais2, String perfilMaquina) {
+        panelEnfrentamiento.preparar(pais1, pais2, perfilMaquina);
+        tarjetas.show(contenido, ENFRENTAMIENTO);
     }
 
     /** El partido ya fue creado en el dominio; aquí solo se muestra y arranca el ciclo del juego. */

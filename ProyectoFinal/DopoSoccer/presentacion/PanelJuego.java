@@ -254,7 +254,7 @@ class PanelJuego extends JPanel {
         dibujarPostes(g2, partido.getCancha());
         dibujarMarcador(g2, partido);
         dibujarAyuda(g2);
-        if (tiempoAviso > 0 && aviso != null) textoCentrado(g2, aviso, Cancha.ANCHO / 2, 92, 15, Estilo.ACENTO);
+        if (tiempoAviso > 0 && aviso != null) textoCentrado(g2, aviso, Cancha.ANCHO / 2, 94, Estilo.titulo(20), Estilo.ACENTO);
         if (partido.isPausado() && !partido.isTerminado()) dibujarPausa(g2);
         g2.dispose();
     }
@@ -271,9 +271,9 @@ class PanelJuego extends JPanel {
         }
         g2.setColor(new Color(20, 40, 90));
         g2.fill(new java.awt.geom.Rectangle2D.Double(0, 232, Cancha.ANCHO, 18));
-        g2.setFont(Estilo.letra(Font.BOLD, 11));
+        g2.setFont(Estilo.titulo(14));
         g2.setColor(Estilo.ACENTO);
-        for (int x = 20; x < Cancha.ANCHO; x += 200) g2.drawString("DOPOSoccer 2026-2", x, 245);
+        for (int x = 20; x < Cancha.ANCHO; x += 200) g2.drawString("DOPOSoccer 2026-2", x, 246);
 
         double alto = Cancha.ALTO - 250;
         for (int i = 0; i < 10; i++) {
@@ -357,7 +357,7 @@ class PanelJuego extends JPanel {
         g2.draw(new java.awt.geom.Rectangle2D.Double(x, y, w, h));
 
         Color etiqueta = numero == 1 ? new Color(255, 230, 90) : new Color(120, 220, 255);
-        textoCentrado(g2, contraMaquina && numero == 2 ? "CPU" : "J" + numero, x + w / 2, y - 6, 11, etiqueta);
+        textoCentrado(g2, contraMaquina && numero == 2 ? "CPU" : "J" + numero, x + w / 2, y - 6, Estilo.titulo(14), etiqueta);
         dibujarEfecto(g2, jugador, x, y, w);
     }
     private void dibujarEfecto(Graphics2D g2, Jugador jugador, double x, double y, double w) {
@@ -440,7 +440,7 @@ class PanelJuego extends JPanel {
         g2.setColor(new Color(255, 255, 255, 30));
         g2.fill(new RoundRectangle2D.Double(Cancha.ANCHO / 2 - 62, 4, 124, 48, 12, 12));
         String marcador = partido.getJugador(1).getGoles() + "  -  " + partido.getJugador(2).getGoles();
-        textoCentrado(g2, marcador, Cancha.ANCHO / 2, 30, 24, Color.WHITE);
+        textoCentrado(g2, marcador, Cancha.ANCHO / 2, 32, Estilo.titulo(29), Color.WHITE);
         textoCentrado(g2, partido.getDescripcionLimite(), Cancha.ANCHO / 2, 47, 11, Estilo.ACENTO);
     }
 
@@ -450,9 +450,9 @@ class PanelJuego extends JPanel {
         double x = izquierda ? borde : borde - ancho;
         String nombre = contraMaquina && numero == 2 ? "Máquina " + perfilMaquina : jugador.getCuenta().getNombre();
         String puntos = contraMaquina && numero == 2 ? "" : "  ·  " + jugador.getCuenta().getPuntos() + " pts";
-        g2.setFont(Estilo.letra(Font.BOLD, 12));
+        g2.setFont(Estilo.titulo(14));
         g2.setColor(Color.WHITE);
-        texto(g2, nombre + "  (" + jugador.getPersonaje().getPais() + ")" + puntos, x, 14, ancho, izquierda);
+        texto(g2, nombre + "  (" + jugador.getPersonaje().getPais() + ")" + puntos, x, 15, ancho, izquierda);
 
         double vida = jugador.getVida() / jugador.getVidaMaxima();
         barra(g2, x, 19, ancho, 9, vida, vida > 0.3 ? new Color(70, 200, 90) : new Color(230, 60, 50));
@@ -493,7 +493,7 @@ class PanelJuego extends JPanel {
     private void dibujarPausa(Graphics2D g2) {
         g2.setColor(new Color(0, 0, 0, 140));
         g2.fill(new java.awt.geom.Rectangle2D.Double(0, ALTO_MARCADOR, Cancha.ANCHO, Cancha.ALTO - ALTO_MARCADOR));
-        textoCentrado(g2, "PAUSA", Cancha.ANCHO / 2, 220, 48, Estilo.ACENTO);
+        textoCentrado(g2, "PAUSA", Cancha.ANCHO / 2, 222, Estilo.titulo(60), Estilo.ACENTO);
         textoCentrado(g2, "P para continuar  ·  Esc para terminar el partido", Cancha.ANCHO / 2, 255, 15, Color.WHITE);
     }
 
@@ -512,6 +512,7 @@ class PanelJuego extends JPanel {
         g2.drawString(texto, (float) tx, (float) y);
     }
 
+    /** Texto pequeño centrado con una sombra leve. */
     private static void textoCentrado(Graphics2D g2, String texto, double cx, double y, float tamanio, Color color) {
         g2.setFont(Estilo.letra(Font.BOLD, tamanio));
         FontMetrics m = g2.getFontMetrics();
@@ -520,6 +521,11 @@ class PanelJuego extends JPanel {
         g2.drawString(texto, tx + 1, (float) y + 1);
         g2.setColor(color);
         g2.drawString(texto, tx, (float) y);
+    }
+
+    /** Texto grande con la letra del juego y contorno oscuro, como en los botones. */
+    private static void textoCentrado(Graphics2D g2, String texto, double cx, double y, Font letra, Color color) {
+        Estilo.textoContorno(g2, texto, letra, cx, y, color, Math.max(2.5f, letra.getSize2D() * 0.14f));
     }
 
     private static void estrella(Graphics2D g2, double cx, double cy, double r) {
